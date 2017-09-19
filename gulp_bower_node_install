@@ -1,0 +1,16 @@
+composer install
+
+cp .env.example .env  
+php artisan key:generate
+npm install -g bower
+npm install bower
+npm install --global gulp-cli
+bower install
+npm install
+ npm install node-sass
+
+
+
+// case node v 4
+npm uninstall --save-dev gulp-sass
+npm install --save-dev gulp-sass@2
