@@ -11,10 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('bo.layouts.master');
-});
+Route::get('/', 'HomeController@index');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('/roles', 'RoleController');

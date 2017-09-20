@@ -105,7 +105,7 @@
         <li class="dropdown user user-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <img src="{{asset('assets/img/tux.png')}}" class="user-image" alt="User Image">
-            <span class="hidden-xs">Alexander Pierce</span>
+            <span class="hidden-xs">{{ Auth::user()->name }}</span>
           </a>
           <ul class="dropdown-menu">
             <!-- User image -->
@@ -113,8 +113,8 @@
               <img src="{{asset('assets/img/tux.png')}}" class="img-circle" alt="User Image">
 
               <p>
-                Alexander Pierce - Web Developer
-                <small>Member since Nov. 2012</small>
+                {{ Auth::user()->name }}
+                <small>Member since {{ Auth::user()->created_at }}</small>
               </p>
             </li>
             <!-- Menu Body -->
@@ -138,14 +138,18 @@
                 <a href="#" class="btn btn-default btn-flat">Profile</a>
               </div>
               <div class="pull-right">
-                <a href="#" class="btn btn-default btn-flat">Sign out</a>
-              </div>
+                <a href="{{ route('logout') }}" class="btn btn-default btn-flat"
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
+                    Logout
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
+            </div>
             </li>
           </ul>
-        </li>
-        <!-- Control Sidebar Toggle Button -->
-        <li>
-          <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
         </li>
       </ul>
     </div>

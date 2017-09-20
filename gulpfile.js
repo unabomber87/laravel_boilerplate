@@ -36,6 +36,10 @@ gulp.task('copy', function() {
     // bootstrap icon
     gulp.src([paths.dev.vendor +'/bootstrap/fonts/*.*'])
         .pipe(copy(paths.production.fonts, { prefix: 4}));
+
+    //sweetalert js
+    gulp.src([paths.dev.vendor +'/sweetalert2/dist/sweetalert2.js'])
+        .pipe(copy(paths.production.js, { prefix: 4}));
 });
 
 
@@ -49,6 +53,7 @@ gulp.task('css', function() {
   // css file
   var cssStream = gulp.src([
         // paths.dev.css+'AdminLTE.css',
+        paths.dev.vendor+'sweetalert2/dist/sweetalert2.min.css',
         paths.dev.css+'*.css'])
       .pipe(sass())
       .pipe(concat('css-files.css'));
@@ -72,7 +77,7 @@ gulp.task('js', function(){
       paths.dev.js+'demo.js'
     ])
     .pipe(concat('app.min.js'))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest(paths.production.js));
 });
 
