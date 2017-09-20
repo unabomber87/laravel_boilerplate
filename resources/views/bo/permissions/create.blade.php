@@ -4,11 +4,11 @@
     <div class="col-xs-12">
         <div class="box box-info">
             <div class="box-header with-border">
-                <h3 class="box-title">Create role</h3>
+                <h3 class="box-title">Create permission</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form class="form-horizontal" action="{{route('roles.store')}}" method="POST">
+            <form class="form-horizontal" action="{{route('permissions.store')}}" method="POST">
                 {{ csrf_field() }}
                 <div class="box-body">
                     <div class="form-group">
@@ -20,7 +20,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <a href="{{ route('roles.index')}}" class="btn btn-default">Cancel</a>
+                    <a href="{{ route('permissions.index')}}" class="btn btn-default">Cancel</a>
                     <button type="submit" class="btn btn-info pull-right">Save</button>
                 </div>
                 <!-- /.box-footer -->
