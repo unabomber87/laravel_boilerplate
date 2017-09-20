@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\App;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 
-class PermissionController extends Controller{
-    private $title;
+class AppController extends Controller{
 
+    private $title;
+    private $attribs;
+    
     /**
      * Create a new controller instance.
      *
@@ -15,18 +18,20 @@ class PermissionController extends Controller{
      */
     public function __construct(){
         $this->middleware('auth');
-        $this->title = 'Permission';
+        $this->title = 'Application';
+        $this->attribs = ['list', 'create', 'update', 'delete'];
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $permissions = Permission::all();
+        $apps = App::all();
         $title = $this->title;
-        $addurl = route('permissions.create');
-        return view('bo.permissions.index', compact('title', 'permissions', 'addurl'));
+        $addurl = route('apps.create');
+        return view('bo.apps.index', compact('title', 'apps', 'addurl'));
     }
 
     /**
@@ -36,7 +41,7 @@ class PermissionController extends Controller{
      */
     public function create(){
         $title = $this->title;
-        return view('bo.permissions.create', compact('title'));
+        return view('bo.apps.create', compact('title'));
     }
 
     /**
@@ -46,8 +51,11 @@ class PermissionController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        $permission = Permission::create(['name' => $request->name]);
-        return redirect('/permissions');
+        $app = App::create(['name' => $request->name]);
+        foreach ($this->attribs as $attrib) {
+          Permission::create(['name' => $request->name.'.'.$attrib]);  
+        }
+        return redirect('/apps');
     }
 
     /**
@@ -57,7 +65,7 @@ class PermissionController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-        //
+        
     }
 
     /**
@@ -68,11 +76,11 @@ class PermissionController extends Controller{
      */
     public function edit($id){
         $title = $this->title;
-        $perm = Permission::find($id);
-        if($perm)
-            return view('bo.permissions.edit', compact('title', 'perm'));
+        $app = App::find($id);
+        if($app)
+            return view('bo.apps.edit', compact('title', 'app'));
         else
-            return redirect('/permissions');
+            return redirect('/apps');
     }
 
     /**
@@ -83,10 +91,20 @@ class PermissionController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id){
-        $permission = Permission::find($id);
-        $permission->name = $request->name;
-        $permission->update();
-        return redirect('/permissions');
+        $app = App::find($id);
+
+        $permissions = Permission::where('name', 'like', '%' . $app->name . '%')->get();
+        
+        $i = 0;
+        foreach($permissions as $perm){
+            $perm->name = $request->name.'.'.$this->attribs[$i];
+            $perm->save();
+            $i++;
+        }
+
+        $app->name = $request->name;
+        $app->update();
+        return redirect('/apps');
     }
 
     /**
@@ -96,8 +114,14 @@ class PermissionController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-        $permission = Permission::find($id);
-        $permission->delete();
-        return redirect('/permissions');
+        $app = App::find($id);
+        $permissions = Permission::where('name', 'like', '%' . $app->name . '%')->get();
+        
+        foreach($permissions as $perm){
+            $perm->delete();
+        }
+
+        $app->delete();
+        return redirect('/apps');
     }
 }

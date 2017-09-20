@@ -49,7 +49,7 @@ class RoleController extends Controller{
      */
     public function store(Request $request){
         $role = Role::create(['name' => $request->name]);
-        return $this->index();
+        return redirect('/roles');
     }
 
     /**
@@ -74,7 +74,7 @@ class RoleController extends Controller{
         if($role)
             return view('bo.roles.edit', compact('title', 'role'));
         else
-            return $this->index();
+            return redirect('/roles');
     }
 
     /**
@@ -88,7 +88,7 @@ class RoleController extends Controller{
         $role = Role::find($id);
         $role->name = $request->name;
         $role->update();
-        return $this->index();
+        return redirect('/roles');
     }
 
     /**
@@ -100,6 +100,6 @@ class RoleController extends Controller{
     public function destroy($id){
         $role = Role::find($id);
         $role->delete();
-        return $this->index();
+        return redirect('/roles');
     }
 }
