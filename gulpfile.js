@@ -40,6 +40,10 @@ gulp.task('copy', function() {
     //sweetalert js
     gulp.src([paths.dev.vendor +'/sweetalert2/dist/sweetalert2.js'])
         .pipe(copy(paths.production.js, { prefix: 4}));
+
+    //jQuery multiselect
+    gulp.src([paths.dev.vendor +'/multiselect/dist/js/multiselect.js'])
+        .pipe(copy(paths.production.js, { prefix: 5}));
 });
 
 

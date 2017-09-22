@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller{
@@ -28,6 +29,7 @@ class RoleController extends Controller{
         $roles = Role::all();
         $title = $this->title;
         $addurl = route('roles.create');
+        
         return view('bo.roles.index', compact('title', 'roles', 'addurl'));
     }
 
@@ -38,7 +40,8 @@ class RoleController extends Controller{
      */
     public function create(){
         $title = $this->title;
-        return view('bo.roles.create', compact('title'));
+        $permissions = Permission::orderBy('name')->get();
+        return view('bo.roles.create', compact('title', 'permissions'));
     }
 
     /**
@@ -48,7 +51,11 @@ class RoleController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+        $permissions = $request->to;
         $role = Role::create(['name' => $request->name]);
+        foreach ($permissions as $perm) {
+            $role->givePermissionTo($perm);
+        }
         return redirect('/roles');
     }
 
@@ -71,8 +78,10 @@ class RoleController extends Controller{
     public function edit($id){
         $title = $this->title;
         $role = Role::find($id);
+        $ownedperms = $role->permissions;
+        $permissions = Permission::whereNotIn('id', $ownedperms->pluck('id'))->orderBy('name')->get();
         if($role)
-            return view('bo.roles.edit', compact('title', 'role'));
+            return view('bo.roles.edit', compact('title', 'role', 'ownedperms', 'permissions'));
         else
             return redirect('/roles');
     }
@@ -85,9 +94,13 @@ class RoleController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id){
+        $permissions = $request->to;
         $role = Role::find($id);
         $role->name = $request->name;
         $role->update();
+
+        $role->syncPermissions($permissions);
+        
         return redirect('/roles');
     }
 
