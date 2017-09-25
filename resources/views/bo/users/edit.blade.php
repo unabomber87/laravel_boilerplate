@@ -79,7 +79,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <a href="{{ route('roles.index')}}" class="btn btn-default">Cancel</a>
+                    <a href="{{ route('users.index')}}" class="btn btn-default">Cancel</a>
                     <button type="submit" class="btn btn-info pull-right">Save</button>
                 </div>
                 <!-- /.box-footer -->

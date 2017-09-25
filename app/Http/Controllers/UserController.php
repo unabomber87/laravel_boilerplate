@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\User;
+use Auth;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -26,11 +27,14 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        if(!Auth::user()->can('user.list'))
+            return redirect()->back();
+
         $users = User::all();
         $title = $this->title;
         $addurl = route('users.create');
-        
         return view('bo.users.index', compact('title', 'users', 'addurl'));
+        
     }
 
 
@@ -40,6 +44,9 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function create(){
+        if(!Auth::user()->can('user.create'))
+            return redirect()->back();
+        
         $title = $this->title;
         $roles = Role::all();
         return view('bo.users.create', compact('title', 'roles'));
@@ -79,6 +86,9 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function edit($id){
+        if(!Auth::user()->can('user.update'))
+            return redirect()->back();
+
         $title = $this->title;
         $user = User::find($id);
         $roles = Role::all();
@@ -116,6 +126,8 @@ class UserController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
+        if(!Auth::user()->can('user.delete'))
+            return redirect()->back();
         $user = User::find($id);
         $user->delete();
         return redirect('/users');

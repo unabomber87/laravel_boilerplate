@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Models\App;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use App\Http\Requests\ApplicationRequest;
 
 class AppController extends Controller{
 
@@ -28,6 +30,8 @@ class AppController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        if(!Auth::user()->can('app.list'))
+            return redirect()->back();
         $apps = App::all();
         $title = $this->title;
         $addurl = route('apps.create');
@@ -40,6 +44,8 @@ class AppController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function create(){
+        if(!Auth::user()->can('role.create'))
+            return redirect()->back();
         $title = $this->title;
         return view('bo.apps.create', compact('title'));
     }
@@ -47,10 +53,10 @@ class AppController extends Controller{
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\ApplicationRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request){
+    public function store(ApplicationRequest $request){
         $app = App::create(['name' => $request->name]);
         foreach ($this->attribs as $attrib) {
           Permission::create(['name' => $request->name.'.'.$attrib]);  
@@ -75,6 +81,8 @@ class AppController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function edit($id){
+        if(!Auth::user()->can('app.update'))
+            return redirect()->back();
         $title = $this->title;
         $app = App::find($id);
         if($app)
@@ -90,7 +98,7 @@ class AppController extends Controller{
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
+    public function update(ApplicationRequest $request, $id){
         $app = App::find($id);
 
         $permissions = Permission::where('name', 'like', '%' . $app->name . '%')->get();
@@ -114,6 +122,8 @@ class AppController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
+        if(!Auth::user()->can('app.delete'))
+            return redirect()->back();
         $app = App::find($id);
         $permissions = Permission::where('name', 'like', '%' . $app->name . '%')->get();
         

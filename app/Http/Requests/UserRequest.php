@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\User;
+use Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest{
@@ -12,7 +13,13 @@ class UserRequest extends FormRequest{
      * @return bool
      */
     public function authorize(){
-        return true;
+        if($this->method() == 'POST'){
+            return Auth::user()->can('user.create');
+        }
+        if($this->method() == 'PUT'){
+            return Auth::user()->can('user.update');
+        }
+        return false;
     }
 
     /**

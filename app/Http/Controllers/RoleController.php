@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Http\Requests\RoleRequest;
+use Auth;
 
 class RoleController extends Controller{
 
@@ -26,6 +28,10 @@ class RoleController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        if(!Auth::user()->can('role.list'))
+            return redirect()->back();
+
+
         $roles = Role::all();
         $title = $this->title;
         $addurl = route('roles.create');
@@ -39,6 +45,8 @@ class RoleController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function create(){
+        if(!Auth::user()->can('role.create'))
+            return redirect()->back();
         $title = $this->title;
         $permissions = Permission::orderBy('name')->get();
         return view('bo.roles.create', compact('title', 'permissions'));
@@ -50,7 +58,7 @@ class RoleController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request){
+    public function store(RoleRequest $request){
         $permissions = $request->to;
         $role = Role::create(['name' => $request->name]);
         foreach ($permissions as $perm) {
@@ -76,6 +84,8 @@ class RoleController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function edit($id){
+        if(!Auth::user()->can('role.update'))
+            return redirect()->back();
         $title = $this->title;
         $role = Role::find($id);
         $ownedperms = $role->permissions;
@@ -93,13 +103,15 @@ class RoleController extends Controller{
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
+    public function update(RoleRequest $request, $id){
         $permissions = $request->to;
         $role = Role::find($id);
         $role->name = $request->name;
         $role->update();
-
-        $role->syncPermissions($permissions);
+        if(!empty($permissions))
+            $role->syncPermissions($permissions);
+        else
+            $role->syncPermissions([]);
         
         return redirect('/roles');
     }
@@ -111,6 +123,9 @@ class RoleController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
+        if(!Auth::user()->can('role.delete'))
+            return redirect()->back();
+        
         $role = Role::find($id);
         $role->delete();
         return redirect('/roles');
