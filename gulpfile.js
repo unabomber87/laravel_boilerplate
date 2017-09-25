@@ -58,6 +58,7 @@ gulp.task('css', function() {
   var cssStream = gulp.src([
         // paths.dev.css+'AdminLTE.css',
         paths.dev.vendor+'sweetalert2/dist/sweetalert2.min.css',
+        paths.dev.vendor+'select2/dist/css/select2.min.css',
         paths.dev.css+'*.css'])
       .pipe(sass())
       .pipe(concat('css-files.css'));
@@ -77,6 +78,7 @@ gulp.task('js', function(){
       paths.dev.vendor+'bootstrap/dist/js/bootstrap.js',
       paths.dev.vendor+'jquery-slimscroll/jquery.slimscroll.min.js',
       paths.dev.vendor+'fastclick/lib/fastclick.js',
+      paths.dev.vendor+'select2/dist/js/select2.full.min.js',
       paths.dev.js+'adminlte.js',
       paths.dev.js+'demo.js'
     ])

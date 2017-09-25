@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\User;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class RoleController extends Controller{
-
+class UserController extends Controller{
     private $title;
 
     /**
@@ -17,7 +17,7 @@ class RoleController extends Controller{
      */
     public function __construct(){
         $this->middleware('auth');
-        $this->title = 'Role';
+        $this->title = 'User';
     }
 
     /**
@@ -26,12 +26,13 @@ class RoleController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $roles = Role::all();
+        $users = User::all();
         $title = $this->title;
-        $addurl = route('roles.create');
+        $addurl = route('users.create');
         
-        return view('bo.roles.index', compact('title', 'roles', 'addurl'));
+        return view('bo.users.index', compact('title', 'users', 'addurl'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -40,8 +41,8 @@ class RoleController extends Controller{
      */
     public function create(){
         $title = $this->title;
-        $permissions = Permission::orderBy('name')->get();
-        return view('bo.roles.create', compact('title', 'permissions'));
+        $roles = Role::all();
+        return view('bo.users.create', compact('title', 'roles'));
     }
 
     /**
@@ -50,13 +51,15 @@ class RoleController extends Controller{
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request){
-        $permissions = $request->to;
-        $role = Role::create(['name' => $request->name]);
-        foreach ($permissions as $perm) {
-            $role->givePermissionTo($perm);
-        }
-        return redirect('/roles');
+    public function store(UserRequest $request){
+        $user = User::create([
+		  'name' => $request->name,
+		  'email' => $request->email,
+		  'password' => bcrypt($request->password)
+		]);
+        $role = Role::find($request->role);
+        $user->syncRoles([$role->name]);
+        return redirect('/users');
     }
 
     /**
@@ -77,31 +80,33 @@ class RoleController extends Controller{
      */
     public function edit($id){
         $title = $this->title;
-        $role = Role::find($id);
-        $ownedperms = $role->permissions;
-        $permissions = Permission::whereNotIn('id', $ownedperms->pluck('id'))->orderBy('name')->get();
-        if($role)
-            return view('bo.roles.edit', compact('title', 'role', 'ownedperms', 'permissions'));
+        $user = User::find($id);
+        $roles = Role::all();
+        if($user)
+            return view('bo.users.edit', compact('title', 'user', 'roles'));
         else
-            return redirect('/roles');
+            return redirect('/users');
     }
+
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\UserRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
-        $permissions = $request->to;
-        $role = Role::find($id);
-        $role->name = $request->name;
-        $role->update();
+    public function update(UserRequest $request, $id){
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if(isset($request->password))
+            $user->password = bcrypt($request->password);
 
-        $role->syncPermissions($permissions);
-        
-        return redirect('/roles');
+        $role = Role::find($request->role);
+        $user->syncRoles([$role->name]);
+        $user->update();  
+        return redirect('/users');
     }
 
     /**
@@ -111,8 +116,8 @@ class RoleController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
-        $role = Role::find($id);
-        $role->delete();
-        return redirect('/roles');
+        $user = User::find($id);
+        $user->delete();
+        return redirect('/users');
     }
 }
