@@ -21,7 +21,7 @@
     "vendor/bin/phpunit"
   ],
   "group": "stable",
-  "dist": "precise",
+  "dist": "trusty",
   "os": "linux"
 }
 
