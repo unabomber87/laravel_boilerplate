@@ -88,10 +88,10 @@ gulp.task('js', function(){
 });
 
 // watch
-gulp.task('watch', function() {  
-  gulp.watch(paths.dev.less + '/*.less', ['css']);
-  gulp.watch(paths.dev.js + '/*.js', ['js']);
-});
+// gulp.task('watch', function() {  
+//   gulp.watch(paths.dev.less + '/*.less', ['css']);
+//   gulp.watch(paths.dev.js + '/*.js', ['js']);
+// });
 
 // run default task
-gulp.task('default', ['copy', 'css', 'js', 'watch']); 
+gulp.task('default', ['copy', 'css', 'js']); 
