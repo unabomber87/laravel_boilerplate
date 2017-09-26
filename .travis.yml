@@ -9,13 +9,13 @@
     "composer update",
     "php artisan key:generate",
     "php artisan migrate",
+    "php artisan seed",
     "npm install -g grunt-cli",
     "npm install -g bower",
     "npm install -g gulp ",
     "bower install",
     "npm install",
     "npm install node-sass",
-    "gulp"
   ],
   "script": [
     "vendor/bin/phpunit"
