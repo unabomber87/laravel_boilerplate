@@ -31,7 +31,7 @@ class AppController extends Controller{
      */
     public function index(){
         if(!Auth::user()->can('app.list'))
-            return redirect()->back();
+            return abort(401);
         $apps = App::all();
         $title = $this->title;
         $addurl = route('apps.create');
@@ -45,7 +45,7 @@ class AppController extends Controller{
      */
     public function create(){
         if(!Auth::user()->can('app.create'))
-            return redirect()->back();
+            return abort(401);
         $title = $this->title;
         return view('bo.apps.create', compact('title'));
     }
@@ -82,7 +82,7 @@ class AppController extends Controller{
      */
     public function edit($id){
         if(!Auth::user()->can('app.update'))
-            return redirect()->back();
+            return abort(401);
         $title = $this->title;
         $app = App::find($id);
         if($app)
@@ -123,7 +123,7 @@ class AppController extends Controller{
      */
     public function destroy($id){
         if(!Auth::user()->can('app.delete'))
-            return redirect()->back();
+            return abort(401);
         $app = App::find($id);
         $permissions = Permission::where('name', 'like', '%' . $app->name . '%')->get();
         

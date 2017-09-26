@@ -28,7 +28,7 @@ class UserController extends Controller{
      */
     public function index(){
         if(!Auth::user()->can('user.list'))
-            return redirect()->back();
+            return abort(401);
 
         $users = User::all();
         $title = $this->title;
@@ -45,7 +45,7 @@ class UserController extends Controller{
      */
     public function create(){
         if(!Auth::user()->can('user.create'))
-            return redirect()->back();
+            return abort(401);
         
         $title = $this->title;
         $roles = Role::all();
@@ -87,7 +87,7 @@ class UserController extends Controller{
      */
     public function edit($id){
         if(!Auth::user()->can('user.update'))
-            return redirect()->back();
+            return abort(401);
 
         $title = $this->title;
         $user = User::find($id);
@@ -127,7 +127,7 @@ class UserController extends Controller{
      */
     public function destroy($id){
         if(!Auth::user()->can('user.delete'))
-            return redirect()->back();
+            return abort(401);
         $user = User::find($id);
         $user->delete();
         return redirect('/users');

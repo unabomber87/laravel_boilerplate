@@ -28,7 +28,7 @@ class SettingController extends Controller{
      */
     public function index(){
         if(!Auth::user()->can('setting.list'))
-            return redirect()->back();
+            return abort(401);
         $settings = Setting::all()->pluck('value', 'name');
         $title = $this->title;
         return view('bo.settings.index', compact('title', 'settings'));
@@ -41,7 +41,7 @@ class SettingController extends Controller{
      */
     public function create(){
         if(!Auth::user()->can('setting.create'))
-            return redirect()->back();
+            return abort(401);
         $title = $this->title;
         return view('bo.settings.create', compact('title'));
     }

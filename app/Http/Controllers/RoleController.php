@@ -29,7 +29,7 @@ class RoleController extends Controller{
      */
     public function index(){
         if(!Auth::user()->can('role.list'))
-            return redirect()->back();
+            return abort(401);
 
 
         $roles = Role::all();
@@ -46,7 +46,7 @@ class RoleController extends Controller{
      */
     public function create(){
         if(!Auth::user()->can('role.create'))
-            return redirect()->back();
+            return abort(401);
         $title = $this->title;
         $permissions = Permission::orderBy('name')->get();
         return view('bo.roles.create', compact('title', 'permissions'));
@@ -85,7 +85,7 @@ class RoleController extends Controller{
      */
     public function edit($id){
         if(!Auth::user()->can('role.update'))
-            return redirect()->back();
+            return abort(401);
         $title = $this->title;
         $role = Role::find($id);
         $ownedperms = $role->permissions;
@@ -124,7 +124,7 @@ class RoleController extends Controller{
      */
     public function destroy($id){
         if(!Auth::user()->can('role.delete'))
-            return redirect()->back();
+            return abort(401);
         
         $role = Role::find($id);
         $role->delete();
