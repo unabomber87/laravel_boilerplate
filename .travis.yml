@@ -16,6 +16,7 @@
     "bower install",
     "npm install",
     "npm install node-sass",
+    "gulp"
   ],
   "script": [
     "vendor/bin/phpunit"
