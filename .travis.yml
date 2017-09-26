@@ -11,7 +11,7 @@
     "php artisan migrate",
     "npm install -g grunt-cli",
     "npm install -g bower",
-    "npm install bower",
+    "npm install -g gulp "
     "bower install",
     "npm install",
     "npm install node-sass",
