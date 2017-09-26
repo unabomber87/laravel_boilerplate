@@ -78,6 +78,14 @@ class InitSeeder extends Seeder{
         // Reset cached roles and permissions
         app()['cache']->forget('spatie.permission.cache');
 
-        //print($user->can('setting.delete'));
+        
+        // setup global config
+        DB::table('settings')->delete();
+        DB::table('settings')->insert(array(
+            array('name'=>'name', 'value' => 'boiler'),
+            array('name'=>'logo', 'value' => '1506353010.png'),
+            array('name'=>'icon', 'value' => '1506356005.png'),
+            array('name'=>'lang', 'value' => '1')
+        ));
     }
 }
