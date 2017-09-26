@@ -65,11 +65,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password-confirm" class="col-sm-2 control-label">Retype password*</label>
+                        <label for="password-confirm" class="col-sm-2 control-label">Role</label>
                         <div class="col-sm-10">
                             <select class="form-control select2" style="width: 100%;" name="role">
                                 @foreach ($roles as $role)
-
                                     <option value="{{$role->id}}" @if($user->hasRole($role->name))selected="true" @endif>{{$role->name}}</option>
                                 @endforeach
                               

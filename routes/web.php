@@ -20,3 +20,8 @@ Route::resource('/roles', 'RoleController');
 Route::resource('/permissions', 'PermissionController');
 Route::resource('/apps', 'AppController');
 Route::resource('/users', 'UserController');
+Route::resource('/settings', 'SettingController');
+
+
+
+Route::post('/settings/upgrade', 'SettingController@upgrade')->name('upgrade');

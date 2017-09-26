@@ -44,7 +44,7 @@ class AppController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function create(){
-        if(!Auth::user()->can('role.create'))
+        if(!Auth::user()->can('app.create'))
             return redirect()->back();
         $title = $this->title;
         return view('bo.apps.create', compact('title'));
